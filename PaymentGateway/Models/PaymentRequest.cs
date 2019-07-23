@@ -44,6 +44,7 @@ namespace PaymentGateway.Models
         /// <summary>
         /// The expiry date as appears on card
         /// </summary>
+        // TODO: Confirm this works with expiry date formats i.e. 08/20, 08/2031, 08-2021
         public DateTime ExpiryDate { get; set; }
 
         /// <summary>
