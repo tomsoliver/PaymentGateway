@@ -1,7 +1,7 @@
 ﻿using PaymentGateway.Models;
 using System.Collections.Generic;
 
-namespace PaymentGateway.Services.PaymentRequestValidation
+namespace PaymentGateway.Services
 {
     /// <summary>
     /// Validates incoming payment requests

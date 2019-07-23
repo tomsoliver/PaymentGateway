@@ -1,7 +1,7 @@
 ﻿using PaymentGateway.Models;
 using System.Threading.Tasks;
 
-namespace PaymentGateway.Services
+namespace PaymentGateway.Infrastructure
 {
     /// <summary>
     /// Sends data to a bank
@@ -11,6 +11,6 @@ namespace PaymentGateway.Services
         /// <summary>
         /// Post a payment request to a bank
         /// </summary>
-        Task<IBankPostResponse> Post(IPaymentRequest request);
+        Task Post(IPaymentRequest request);
     }
 }

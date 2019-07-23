@@ -12,6 +12,8 @@ namespace PaymentGateway.Models
         /// </summary>
         public PaymentRequest()
         {
+            Id = Guid.NewGuid().ToString();
+            RequestTime = DateTime.Now;
         }
 
         /// <summary>
@@ -19,8 +21,8 @@ namespace PaymentGateway.Models
         /// </summary>
         public PaymentRequest(string cardNumber, DateTime expiryDate, decimal amount, string currencyCode, ushort cvv)
         {
-
             Id = Guid.NewGuid().ToString();
+            RequestTime = DateTime.Now;
             CardNumber = cardNumber;
             ExpiryDate = expiryDate;
             Amount = amount;
@@ -59,6 +61,11 @@ namespace PaymentGateway.Models
         /// </summary>
         public ushort Cvv { get; set; }
 
+        /// <summary>
+        /// The time the request was made
+        /// </summary>
+        public DateTime RequestTime { get; }
+
         public override bool Equals(object obj)
         {
             return obj is PaymentRequest request &&
@@ -67,6 +74,7 @@ namespace PaymentGateway.Models
                    ExpiryDate == request.ExpiryDate &&
                    Amount == request.Amount &&
                    CurrencyCode == request.CurrencyCode &&
+                   RequestTime == request.RequestTime &&
                    Cvv == request.Cvv;
         }
 

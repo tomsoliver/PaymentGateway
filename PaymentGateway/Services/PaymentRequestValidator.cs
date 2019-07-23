@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using PaymentGateway.Models;
 
-namespace PaymentGateway.Services.PaymentRequestValidation
+namespace PaymentGateway.Services
 {
     public class PaymentRequestValidator : IPaymentRequestValidator
     {
@@ -22,10 +22,12 @@ namespace PaymentGateway.Services.PaymentRequestValidation
             // Allows us to return all validation reasons to the merchant for them to deal with
             var reasonList = new List<string>();
             
-            if (string.IsNullOrWhiteSpace(request.CardNumber))
+            if (string.IsNullOrEmpty(request.CardNumber))
                 reasonList.Add("Card number must be populated");
-            else if (!int.TryParse(request.CardNumber, out _))
+            else if (!long.TryParse(request.CardNumber, out _))
                 reasonList.Add("Card number must be numeric");
+            else if (request.CardNumber.Length < 15 || request.CardNumber.Length > 19)
+                reasonList.Add("Card number a valid length");
 
             // TODO: Check if validation is performed at banks end
             if (request.ExpiryDate < DateTime.Now)

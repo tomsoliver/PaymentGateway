@@ -11,7 +11,7 @@ namespace PaymentGateway.Repository
         /// Create a payment request
         /// </summary>
         /// <param name="request"></param>
-        /// <returns>Returns the id of th created payment</returns>
+        /// <returns>Returns the id of the created payment</returns>
         string Create(IPaymentRequest request);
 
         /// <summary>
@@ -20,6 +20,13 @@ namespace PaymentGateway.Repository
         /// <param name="id">The id of the desired payment</param>
         /// <returns>Returns null if the request does not exist, or the payment request
         /// if it does</returns>
-        IPaymentRequest Read(string id);
+        SecuredPaymentRequest Read(string id);
+
+        /// <summary>
+        /// Update the state of the desired payment in the repository
+        /// </summary>
+        /// <param name="id">The id of the desired payment</param>
+        /// <returns>Returns the id of the updated payment</returns>
+        string UpdateResult(string id, bool result);
     }
 }

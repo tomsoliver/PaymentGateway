@@ -7,7 +7,6 @@ namespace PaymentGateway.Models
     /// </summary>
     public interface IPaymentRequest
     {
-
         /// <summary>
         /// This identifier for this payment
         /// </summary>
@@ -22,6 +21,7 @@ namespace PaymentGateway.Models
         /// <summary>
         /// The expiry date as appears on card
         /// </summary>
+        // TODO: Check if this should be string, perform more validation.
         DateTime ExpiryDate { get; }
 
         /// <summary>
@@ -38,5 +38,10 @@ namespace PaymentGateway.Models
         /// Card Verification Value as appears on card
         /// </summary>
         ushort Cvv { get; }
+
+        /// <summary>
+        /// The time the request was made
+        /// </summary>
+        DateTime RequestTime { get; }
     }
 }

@@ -1,10 +1,13 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using PaymentGateway.Infrastructure;
 using PaymentGateway.Repository;
+using PaymentGateway.Security;
 using PaymentGateway.Services;
 
 namespace PaymentGateway
@@ -28,8 +31,23 @@ namespace PaymentGateway
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
-            services.AddSingleton<IBankService, MockBankService>();
+            // Set up security services
+            services.AddSingleton<IUserService, MockUserService>();
+
+            // Set up authentication
+            services.AddAuthentication()
+                .AddScheme<AuthenticationSchemeOptions, BasicAuthenticationHandler>("BasicAuthentication", null);
+
+            services.AddSingleton<ILogger>(_logger);
+
+            // Set up services
             services.AddSingleton<IPaymentRequestRepository, InMemoryRepository>();
+            services.AddSingleton<IBankService>(new MockBankService(_logger)
+            {
+                Success = true
+            });
+            services.AddSingleton<IPaymentRequestValidator, PaymentRequestValidator>();
+            services.AddSingleton<IPaymentRequestHandler, PaymentRequestHandler>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -48,6 +66,7 @@ namespace PaymentGateway
             }
 
             app.UseHttpsRedirection();
+            app.UseAuthentication();
             app.UseMvc();
         }
     }

@@ -11,7 +11,8 @@ namespace PaymentGateway.Repository
     public class InMemoryRepository : IPaymentRequestRepository
     {
         private readonly ILogger _logger;
-        private ConcurrentDictionary<string, IPaymentRequest> _inMemoryStore = new ConcurrentDictionary<string, IPaymentRequest>();
+        private ConcurrentDictionary<string, SecuredPaymentRequest> _inMemoryStore = 
+            new ConcurrentDictionary<string, SecuredPaymentRequest>();
 
         /// <summary>
         /// Create an in memory repository
@@ -41,7 +42,8 @@ namespace PaymentGateway.Repository
             if (_inMemoryStore.ContainsKey(request.Id))
                 throw new Exception($"Payment request with id '{request.Id}' already exists in repository");
 
-            var result = _inMemoryStore.GetOrAdd(request.Id, request);
+            var repositoryRequest = new SecuredPaymentRequest(request);
+            var result = _inMemoryStore.GetOrAdd(request.Id, repositoryRequest);
 
             // TODO: Create exception type for this exception
             // TODO: Add check to verify if operation was get or add, i.e. compare request and result to ensure
@@ -58,7 +60,7 @@ namespace PaymentGateway.Repository
         /// <param name="id">The id of the desired payment</param>
         /// <returns>Returns null if the request does not exist, or the payment request
         /// if it does</returns>
-        public IPaymentRequest Read(string id)
+        public SecuredPaymentRequest Read(string id)
         {
             _logger?.LogTrace("Reading request from in-memory store");
 
@@ -72,6 +74,28 @@ namespace PaymentGateway.Repository
 
             _logger?.LogTrace("Read request from in-memory store");
             return request;
+        }
+
+        /// <summary>
+        /// Update the state of the desired payment in the repository
+        /// </summary>
+        /// <param name="id">The id of the desired payment</param>
+        /// <returns>Returns the id of the updated payment</returns>
+        public string UpdateResult(string id, bool result)
+        {
+            _logger?.LogTrace("Reading request from in-memory store");
+
+            if (string.IsNullOrEmpty(id))
+                throw new ArgumentException("message", nameof(id));
+
+            if (!_inMemoryStore.ContainsKey(id))
+                return null;
+
+            // TODO: Handle race conditions
+            _inMemoryStore[id].Result = result;
+
+            _logger?.LogTrace("Read request from in-memory store");
+            return id;
         }
     }
 }

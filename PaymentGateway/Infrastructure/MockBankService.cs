@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using PaymentGateway.Models;
 
-namespace PaymentGateway.Services
+namespace PaymentGateway.Infrastructure
 {
     /// <summary>
     /// A mock bank service for the purpose of testing
@@ -18,19 +18,19 @@ namespace PaymentGateway.Services
             _logger?.LogTrace($"Creating a {nameof(MockBankService)}");
         }
 
-        public IBankPostResponse Response { get; set; }
+        public bool Success { get; set; }
 
         /// <summary>
         /// Post a payment request to a bank via http
         /// </summary>
-        public async Task<IBankPostResponse> Post(IPaymentRequest request)
+        public async Task Post(IPaymentRequest request)
         {
             _logger?.LogTrace($"Simulating post to a bank for request {request.Id}");
 
             if (request == null)
                 throw new ArgumentNullException(nameof(request));
 
-            return Response;
+            if (!Success) throw new BankPostException("Posting to bank failed");
         }
     }
 }

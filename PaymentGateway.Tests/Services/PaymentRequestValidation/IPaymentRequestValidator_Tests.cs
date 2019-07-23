@@ -1,5 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using PaymentGateway.Services.PaymentRequestValidation;
+using PaymentGateway.Services;
 using System;
 
 namespace PaymentGateway.Tests.Services.PaymentRequestValidation
